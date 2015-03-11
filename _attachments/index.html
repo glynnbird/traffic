@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+  <title>Traffic Generator</title>
+  <link rel="stylesheet"  href="bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet"  href="bootstrap/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="index.css" />
+  <script src="jquery-1.11.2.min.js"></script>
+  <script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="pouchdb-3.3.0.min.js"></script>
+  <script src="async.js"></script>
+  <script src="index.js"></script>
+</head>
+
+<body>
+  
+  <div class="container">
+  
+    <h1>Cloudant Raspberry Pi Cluster Demo</h1>
+    <div class="well">
+      Create documents in the remote Cloudant database using the buttons below. See the <code>curl</code> equivalent as you press the buttons and watch the lights flash on the cluster indicating the nodes that are storing and retrieving data. Disco Mode creates a continuous stream of reads and writes. 
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <img class="img-responsive" src="img/cluster.png" />
+      </div>
+      <div class="col-xs-6">
+      
+      
+        <ul id="crud" class="list-unstyled mylist">
+          <li><button type="button" class="btn btn-danger btn-lg" onclick="getSlash()">GET /test</button></li>
+          <li><button type="button" class="btn btn-info btn-lg" onclick="postDoc()">POST /test</button></li>
+          <li><button id="getbutton" type="button" class="btn btn-danger btn-lg" onclick="getDoc(randId())" disabled>GET /test/-id-</button></li>
+          <li><button id="deletebutton" type="button" class="btn btn-warning btn-lg" onclick="deleteDoc(randId(true))" disabled>DELETE /test/-id-</button></li>
+          <li><button id="emptybutton" type="button" class="btn btn-warning btn-lg" onclick="clearTest()">Empty /test</button></li>
+      
+          <li>
+            <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="" onclick="toggleDisco()">
+                  Disco mode
+                </label>
+              </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div id="curl" class="well">
+          ...   
+        </div>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Response
+                </a>
+              </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div id="response" class="panel-body">
+                <span><strong>err = </strong></span> 
+                <code id="response_error"></code>
+                <br />
+                <span><strong>data = </strong></span> 
+                <code id="response_data"></code>
+            
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <hr />
+  
+    <h1>Replication</h1>
+    <div class="well">
+      Using a local, in-browser database using PouchDB and the Cloudant cluster as before, we can write data to both databases and replicate from local to remote, from remote to local or continuously in both directions.
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <h3><img  class="icon" src="img/pouchdb_sm.png" /> Local <span id="localdb"></span></h3>
+        <div class="alert alert-info">
+          <ul id="rlocal" class="list-unstyled mylist">
+            <li><button type="button" class="btn btn-danger btn-sm" onclick="lGetSlash()">GET /mydb</button></li>
+            <li><button type="button" class="btn btn-info btn-sm" onclick="lPostBulk()">Bulk POST /mydb</button></li>
+            <li><button type="button" class="btn btn-warning btn-sm" onclick="lClear()">Empty /mydb</button></li>
+            
+          </ul>  
+        </div>
+      </div>
+      <div class="col-xs-4">
+        <h3>&nbsp;</h3>
+        <ul class="list-unstyled mylist">
+          <li><button type="button" class="btn btn-primary btn-sm" onclick="lReplicate()">Replicate <span class="glyphicon glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button></li>  
+          <li><button type="button" class="btn btn-primary btn-sm" onclick="rReplicate()"><span class="glyphicon glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Replicate</button></li> 
+          <li><button id="livereplicatebtn" type="button" class="btn btn-warning btn-sm" onclick="liveReplicate()"><span class="glyphicon glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Replicate <span class="glyphicon glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button></li> 
+          <li><button id="cancelreplicatebtn" type="button" class="btn btn-warning btn-sm" onclick="cancelReplicate()" disabled  >Cancel</button></li> 
+        </ul>
+      </div>      
+      <div class="col-xs-4">
+        <h3><img class="icon" src="img/cluster_sm.png" /> Remote <span id="remotedb"></span></h3>
+        <div class="alert alert-warning">
+          <ul id="rremote" class="list-unstyled mylist">
+            <li><button type="button" class="btn btn-danger btn-sm" onclick="rGetSlash()">GET /mydb</button></li>
+            <li><button type="button" class="btn btn-info btn-sm" onclick="rPostBulk()">Bulk POST /mydb</button></li>
+            <li><button type="button" class="btn btn-warning btn-sm" onclick="rClear()">Empty /mydb</button></li>
+            </ul>
+        </div>
+      </div>
+    <ul id="stack">
+    
+    </ul>
+  </div>
+</body>
+</html>

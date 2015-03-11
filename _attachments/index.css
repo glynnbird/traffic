@@ -1,0 +1,12 @@
+.mylist li {
+  margin-left: 10px;
+  margin-bottom:10px ;
+}
+
+.btn[disabled] {
+  background-color: #999;
+}
+
+.icon {
+  height:25px;
+}
